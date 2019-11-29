@@ -16,7 +16,7 @@ export default {
 
       AppWallet.setCurrentAccountGroup(group);
 
-      this.$router.push({ name: 'cabinet-cyberd' });
+      this.$router.push({ name: 'cabinet-geesome' });
     },
     copyToClipboard() {
       Helper.copyToClipboard(this.seedPhrase);

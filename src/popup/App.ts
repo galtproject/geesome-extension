@@ -42,11 +42,13 @@ Vue.use(storePlugin, {
 
   [StorageVars.Path]: null,
   [StorageVars.EncryptedSeed]: null,
+  [StorageVars.IpfsUrl]: '/workers/ipfs/',
   // [StorageVars.CurrentAccounts]: null,
   // [StorageVars.NetworkList]: appConfig.baseNetworks.map((name) => ({name, title: EthData.humanizeKey(name)})),
   [StorageVars.IpfsUrl]: null,
   [StorageVars.CurrentCabinetRoute]: null,
   [StorageVars.Settings]: null,
+  // [StorageVars.ExtensionTabPageUrl]: 'chrome-extension://' + (global as any).chrome.runtime.id + '/tab-page/index.html',
 });
 
 export default {
@@ -65,6 +67,8 @@ export default {
         this.loading = false;
       } else if (request.type === 'page-action' && request.method === 'save-and-link') {
         this.$router.push({ name: 'cabinet-cyberd-save-and-link', query: request.data });
+      } else if (request.type === 'page-action' && request.method === 'link') {
+        this.$router.push({ name: 'cabinet-cyberd-link', query: request.data });
       }
     });
 
@@ -99,7 +103,7 @@ export default {
         this.loadingBackup = true;
         getIsBackupExists()
           .then(ipld => {
-            if (this.loadingBackup == false) {
+            if (!this.loadingBackup) {
               return;
             }
             this.loading = false;
@@ -120,14 +124,17 @@ export default {
       }
     },
     getSettings() {
+      console.log('getSettings');
       getSettings([
         Settings.StorageNodeAddress,
         Settings.StorageNodeType,
+        Settings.StorageNodeKey,
         Settings.StorageExtensionIpld,
         Settings.StorageExtensionIpldUpdatedAt,
         Settings.StorageExtensionIpnsUpdatedAt,
         Settings.StorageExtensionIpldError,
       ]).then(settings => {
+        console.log('settings', settings);
         this.$store.commit(StorageVars.Settings, settings);
       });
     },
@@ -149,7 +156,7 @@ export default {
       this.init();
     },
     nodeIp() {
-      this.$store.commit(StorageVars.IpfsUrl, 'http://' + this.nodeIp + ':8080/ipfs/');
+      // this.$store.commit(StorageVars.IpfsUrl, 'http://' + this.nodeIp + ':8080/ipfs/');
     },
   },
 

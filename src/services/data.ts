@@ -5,6 +5,9 @@ import CyberdRpc from 'js-cosmos/dist/rpc/cyberdRpc';
 import CosmosSdkRpc from 'js-cosmos/dist/rpc/cosmosSdkRpc';
 
 const _ = require('lodash');
+const ethers = require('ethers');
+const bip39 = require('bip39');
+const regex = require('./regex');
 const pIteration = require('p-iteration');
 
 const Unixfs = require('ipfs-unixfs');
@@ -12,9 +15,13 @@ const { DAGNode, util: DAGUtil } = require('ipld-dag-pb');
 
 const cybCrypto = require('../crypto');
 const appConfig = require('../config');
-
 const cyberDConfig = require('js-cosmos/dist/config/cyberd');
 const cosmosConfig = require('js-cosmos/dist/config/cosmos');
+
+export enum Network {
+  Geesome = 'geesome',
+  CyberD = 'cyberd',
+}
 
 export class PermanentStorage {
   static pseudoStorage = {};
@@ -28,7 +35,7 @@ export class PermanentStorage {
       if (_.isObject(value)) {
         value = JSON.stringify(value);
       }
-      // console.log('setValue', name, value);
+      console.log('setValue', name, value);
       (global as any).chrome.storage.sync.set({ [name]: value }, function() {
         resolve();
       });
@@ -41,7 +48,7 @@ export class PermanentStorage {
         return resolve(this.pseudoStorage[name]);
       }
       (global as any).chrome.storage.sync.get([name], function(result) {
-        // console.log('getValue', name, result[name]);
+        console.log('getValue', name, result[name]);
         resolve(result[name]);
       });
     });
@@ -225,6 +232,9 @@ export class AppWallet {
 }
 
 export function getIpfsHash(string) {
+  if (string.match(regex.base64)) {
+    string = new Buffer(string.replace(regex.base64, ''), 'base64');
+  }
   return new Promise((resolve, reject) => {
     const unixFsFile = new Unixfs('file', Buffer.from(string));
     const buffer = unixFsFile.marshal();
