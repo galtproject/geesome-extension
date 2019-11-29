@@ -1,4 +1,7 @@
-import { AppCrypto, AppWallet, PermanentStorage, StorageVars } from '../../../../services/data';
+import { AppWallet, PermanentStorage } from '../../../../services/data';
+import { StorageVars } from '../../../../enum';
+
+const cybCrypto = require('../../../../crypto');
 
 export default {
   template: require('./LogIn.html'),
@@ -8,7 +11,7 @@ export default {
   methods: {
     async login() {
       await AppWallet.setPassword(this.password);
-      this.$router.push({ name: 'cabinet-cyberd' });
+      this.$router.push({ name: 'cabinet-geesome' });
     },
   },
   computed: {
@@ -17,7 +20,7 @@ export default {
         return true;
       }
       try {
-        AppCrypto.decrypt(this.encryptedSeed, this.password);
+        cybCrypto.decrypt(this.encryptedSeed, this.password);
       } catch (e) {
         return true;
       }

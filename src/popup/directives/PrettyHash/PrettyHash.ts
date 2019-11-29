@@ -1,4 +1,4 @@
-import { StorageVars } from '../../../services/data';
+import { StorageVars } from '../../../enum';
 
 export default {
   name: 'pretty-hash',
@@ -17,6 +17,7 @@ export default {
       }
     },
     ipfsUrl() {
+      // return this.$store.state[StorageVars.ExtensionTabPageUrl] + '#/';
       return this.$store.state[StorageVars.IpfsUrl];
     },
   },

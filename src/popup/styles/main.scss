@@ -9,11 +9,11 @@ $fa-font-path: 'webfonts';
 
 @font-face {
   font-family: Play;
-  src: url('../assets/fonts/Play.woff2');
-  src: url('../assets/fonts/Play.eot'); /* IE9 Compat Modes */
-  src: url('../assets/fonts/Play.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../assets/fonts/Play.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('../assets/fonts/Play.woff') format('woff'), /* Pretty Modern Browsers */ url('../assets/fonts/Play.ttf') format('truetype'),
-    /* Safari, Android, iOS */ url('../assets/fonts/Play.svg#Play') format('svg'); /* Legacy iOS */
+  src: url('../../fonts/Play.woff2');
+  src: url('../../fonts/Play.eot'); /* IE9 Compat Modes */
+  src: url('../../fonts/Play.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../../fonts/Play.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('../../fonts/Play.woff') format('woff'), /* Pretty Modern Browsers */ url('../../fonts/Play.ttf') format('truetype'),
+    /* Safari, Android, iOS */ url('../../fonts/Play.svg#Play') format('svg'); /* Legacy iOS */
 }
 
 body {
@@ -118,14 +118,14 @@ h5 {
     align-items: center;
     flex-direction: column;
     .logo {
-      width: 125px;
-      height: 125px;
+      width: 150px;
+      height: 100px;
       img {
         max-width: 100%;
       }
     }
     & > * {
-      max-width: 200px;
+      max-width: 300px;
       text-align: center;
     }
   }
@@ -186,4 +186,22 @@ h5 {
 #saved-content {
   overflow-y: auto;
   height: 520px;
+}
+
+.center-select-text {
+  width: 200px;
+
+  label {
+    width: 100%;
+    text-align: center;
+  }
+  input {
+    text-align: center;
+    position: relative;
+    left: 12px;
+  }
+}
+
+.md-menu-content-container .md-selected .md-list-item-text {
+  color: #36d6ae;
 }
