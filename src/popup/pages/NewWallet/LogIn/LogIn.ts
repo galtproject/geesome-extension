@@ -11,7 +11,7 @@ export default {
   methods: {
     async login() {
       await AppWallet.setPassword(this.password);
-      this.$router.push({ name: 'cabinet-cyberd' });
+      this.$router.push({ name: 'cabinet-geesome' });
     },
   },
   computed: {

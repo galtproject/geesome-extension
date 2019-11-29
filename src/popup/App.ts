@@ -124,14 +124,17 @@ export default {
       }
     },
     getSettings() {
+      console.log('getSettings');
       getSettings([
         Settings.StorageNodeAddress,
         Settings.StorageNodeType,
+        Settings.StorageNodeKey,
         Settings.StorageExtensionIpld,
         Settings.StorageExtensionIpldUpdatedAt,
         Settings.StorageExtensionIpnsUpdatedAt,
         Settings.StorageExtensionIpldError,
       ]).then(settings => {
+        console.log('settings', settings);
         this.$store.commit(StorageVars.Settings, settings);
       });
     },

@@ -26,6 +26,13 @@ export default {
   },
   watch: {},
   computed: {
+    names() {
+      const result = [Settings.StorageNodeType, Settings.StorageNodeAddress];
+      if (this.values[Settings.StorageNodeType] === 'geesome') {
+        result.push(Settings.StorageNodeKey);
+      }
+      return result;
+    },
     settingList() {
       return this.names.map(name => {
         return {
@@ -51,8 +58,6 @@ export default {
     },
   },
   data() {
-    return {
-      names: [Settings.StorageNodeType, Settings.StorageNodeAddress],
-    };
+    return {};
   },
 };

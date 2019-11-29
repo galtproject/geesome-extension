@@ -3,15 +3,17 @@ import { StorageVars } from './enum';
 const _ = require('lodash');
 const pIteration = require('p-iteration');
 const ipfsService = require('./backgroundServices/ipfs');
-const base36Trie = require('@galtproject/geesome-libs/src/base36Trie');
+const base36Trie = require('geesome-libs/src/base36Trie');
 const cheerio = require('cheerio');
 const IPFS = require('ipfs');
 // const ipfsClient = require('ipfs-http-client');
 
 import { BackgroundRequest, BackgroundResponse } from './services/backgroundGateway';
 import { Settings } from './backgroundServices/types';
-import { getIpfsHash, PermanentStorage, StorageVars } from './services/data';
+import { getIpfsHash, PermanentStorage } from './services/data';
 import Helper from '@galtproject/frontend-core/services/helper';
+
+const { GeesomeClient } = require('geesome-libs/src/GeesomeClient');
 
 const databaseService = require('./backgroundServices/database');
 
@@ -84,9 +86,21 @@ function setAction(action) {
 }
 
 async function saveContentToIpfs(content, description, mimeType) {
-  return ipfsService.saveContent(content).then(result => {
-    return { contentHash: result.id, keywords: null, description, size: result.size, mimeType };
-  });
+  const nodeType = await databaseService.getSetting(Settings.StorageNodeType);
+  if (nodeType === 'ipfs') {
+    return ipfsService.saveContent(content).then(result => {
+      return { contentHash: result.id, keywords: null, description, size: result.size, mimeType };
+    });
+  } else {
+    const geesome = new GeesomeClient({
+      server: 'https://geesome-node.galtproject.io:7722',
+      apiKey: 'MCYK5V1-15Q48EQ-QSEKRWX-1ZS0SPW',
+    });
+    await geesome.init();
+    return geesome.saveContentData(content, { mimeType }).then(result => {
+      return { contentHash: result.storageId, keywords: null, description, size: result.size, mimeType };
+    });
+  }
 }
 
 async function saveExtensionDataAndBindToIpns() {
@@ -140,12 +154,12 @@ async function saveExtensionDataAndBindToIpns() {
     await databaseService.setSetting(Settings.StorageExtensionIpld, extensionDataIpld);
     await databaseService.setSetting(Settings.StorageExtensionIpldUpdatedAt, Helper.now());
 
-    const extensionIpnsId = await ipfsService.createExtensionIpnsIfNotExists();
-    await ipfsService.bindToStaticId(extensionDataIpld, extensionIpnsId);
-
-    await databaseService.setSetting(Settings.StorageExtensionIpnsUpdatedAt, Helper.now());
-    await databaseService.setSetting(Settings.StorageExtensionIpldError, null);
-    console.log('saveExtensionDataAndBindToIpns finish');
+    // const extensionIpnsId = await ipfsService.createExtensionIpnsIfNotExists();
+    // await ipfsService.bindToStaticId(extensionDataIpld, extensionIpnsId);
+    //
+    // await databaseService.setSetting(Settings.StorageExtensionIpnsUpdatedAt, Helper.now());
+    // await databaseService.setSetting(Settings.StorageExtensionIpldError, null);
+    // console.log('saveExtensionDataAndBindToIpns finish');
   } catch (e) {
     console.error(e);
     await databaseService.setSetting(Settings.StorageExtensionIpldError, e && e.message ? e.message : e);
@@ -319,6 +333,7 @@ onMessage((request, sender, sendResponse) => {
       return;
     }
     if (request.type === BackgroundRequest.SetSettings) {
+      console.log('BackgroundResponse.SetSettings request', request.data);
       pIteration
         .forEach(request.data, setting => databaseService.setSetting(setting.name, setting.value))
         .then(() => initServices())

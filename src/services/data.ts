@@ -35,7 +35,7 @@ export class PermanentStorage {
       if (_.isObject(value)) {
         value = JSON.stringify(value);
       }
-      // console.log('setValue', name, value);
+      console.log('setValue', name, value);
       (global as any).chrome.storage.sync.set({ [name]: value }, function() {
         resolve();
       });
@@ -48,7 +48,7 @@ export class PermanentStorage {
         return resolve(this.pseudoStorage[name]);
       }
       (global as any).chrome.storage.sync.get([name], function(result) {
-        // console.log('getValue', name, result[name]);
+        console.log('getValue', name, result[name]);
         resolve(result[name]);
       });
     });

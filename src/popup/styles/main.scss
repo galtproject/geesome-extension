@@ -118,14 +118,14 @@ h5 {
     align-items: center;
     flex-direction: column;
     .logo {
-      width: 125px;
-      height: 125px;
+      width: 150px;
+      height: 100px;
       img {
         max-width: 100%;
       }
     }
     & > * {
-      max-width: 200px;
+      max-width: 300px;
       text-align: center;
     }
   }

@@ -15,7 +15,7 @@ export default {
     },
     currentAccount() {
       const networkName = this.currentAccount.networkName;
-      this.$router.push({ name: 'cabinet-' + networkName });
+      // this.$router.push({ name: 'cabinet-' + networkName });
     },
   },
   computed: {

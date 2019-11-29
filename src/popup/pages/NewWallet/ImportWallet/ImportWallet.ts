@@ -16,7 +16,7 @@ export default {
 
       await AppWallet.setCurrentAccountGroup(group);
 
-      this.$router.push({ name: 'cabinet-cyberd' });
+      this.$router.push({ name: 'cabinet-geesome' });
     },
   },
   computed: {

@@ -1,5 +1,5 @@
 export {};
-import { JsIpfsService } from '@galtproject/geesome-libs/src/JsIpfsService';
+const JsIpfsService = require('geesome-libs/src/JsIpfsService');
 const pull = require('pull-stream');
 const regex = require('../services/regex');
 let ipfs;

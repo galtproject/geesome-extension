@@ -12,11 +12,11 @@ export default {
   methods: {
     setCurrentCabinet() {
       let cabinetRoute;
-      if (this.currentAccount.networkName === 'cyberd') {
-        cabinetRoute = { name: 'cabinet-cyberd', query: { search: '' } };
-      } else if (this.currentAccount.networkName === 'geesome') {
-        cabinetRoute = { name: 'cabinet-geesome', query: { search: '' } };
-      }
+      // if (this.currentAccount.networkName === 'cyberd') {
+      //   cabinetRoute = { name: 'cabinet-cyberd', query: { search: '' } };
+      // } else if (this.currentAccount.networkName === 'geesome') {
+      cabinetRoute = { name: 'cabinet-geesome', query: { search: '' } };
+      // }
       this.$store.commit(StorageVars.CurrentCabinetRoute, cabinetRoute);
     },
   },
