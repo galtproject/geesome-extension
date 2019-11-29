@@ -1,3 +1,5 @@
+import { StorageVars } from './enum';
+
 const _ = require('lodash');
 const pIteration = require('p-iteration');
 const ipfsService = require('./backgroundServices/ipfs');
@@ -102,7 +104,8 @@ async function saveExtensionDataAndBindToIpns() {
     console.log('there is no encryptedSeed, break saving');
     return;
   }
-  const cyberdAccounts = await PermanentStorage.getValue(StorageVars.CyberDAccounts);
+  const allAccounts = await PermanentStorage.getValue(StorageVars.AllAccounts);
+  const accountsGroups = await PermanentStorage.getValue(StorageVars.AccountsGroups);
 
   try {
     const contents = {};
@@ -123,7 +126,8 @@ async function saveExtensionDataAndBindToIpns() {
       contents,
       settings,
       encryptedSeed,
-      cyberdAccounts,
+      allAccounts,
+      accountsGroups,
     };
     console.log('extensionsData', extensionsData);
 
@@ -157,7 +161,8 @@ async function restoreExtensionDataFromIpld(backupIpld) {
   });
 
   await PermanentStorage.setValue(StorageVars.EncryptedSeed, backupData.encryptedSeed);
-  await PermanentStorage.setValue(StorageVars.CyberDAccounts, backupData.cyberdAccounts);
+  await PermanentStorage.setValue(StorageVars.AccountsGroups, backupData.accountsGroups);
+  await PermanentStorage.setValue(StorageVars.AllAccounts, backupData.allAccounts);
 
   for (let i = 0; i < backupData.contentCount; i++) {
     const node = base36Trie.getNode(backupData.contents, i);
@@ -251,6 +256,8 @@ onMessage((request, sender, sendResponse) => {
               faviconEL = $('[rel="shortcut icon"]');
             }
             if (faviconEL || faviconEL.attr('href')) {
+              const faviconData = faviconEL.attr('href').replace(/^data:image\/.+;base64,/, '');
+              const buf = new Buffer(faviconData, 'base64');
               data.iconHash = (await ipfsService.saveContent(faviconEL.attr('href'))).id;
               data.iconMimeType = 'image/x-icon';
             }

@@ -1,7 +1,7 @@
-import { AppWallet, StorageVars } from '../../../../../services/data';
-import { CyberD } from '../../../../../services/cyberd';
 import { addIpfsContentArray, saveContent } from '../../../../../services/backgroundGateway';
 import ContentDetails from '../../../../directives/ContentDetails/ContentDetails';
+import { StorageVars } from '../../../../../enum';
+import { AppWallet } from '../../../../../services/data';
 
 const pIteration = require('p-iteration');
 
@@ -9,6 +9,8 @@ export default {
   template: require('./LinkContent.html'),
   components: { ContentDetails },
   created() {
+    this.$cyberD = AppWallet.getCyberDInstance();
+
     this.inputKeywordsStr = this.keywordsStr;
   },
   methods: {
@@ -21,7 +23,7 @@ export default {
 
       try {
         const results = await pIteration.mapSeries(keywordHashes, async keywordHash => {
-          return CyberD.link(
+          return this.$cyberD.link(
             {
               address: this.currentAccount.address,
               privateKey: await AppWallet.decryptByPassword(this.currentAccount.encryptedPrivateKey),
@@ -45,6 +47,7 @@ export default {
 
         this.$router.push({ name: 'cabinet-cyberd' });
       } catch (e) {
+        console.error(e);
         this.$notify({
           type: 'error',
           title: e && e.message ? e.message : e || 'Unknown error',
@@ -70,7 +73,7 @@ export default {
       return this.keywords ? this.keywords.join(', ') : '';
     },
     currentAccount() {
-      return this.$store.state[StorageVars.Account];
+      return this.$store.state[StorageVars.CurrentAccountItem];
     },
     disableLink() {
       return !(this.contentHash || this.inputContentHash) || !(this.keywordsStr || this.inputKeywordsStr);
