@@ -34,6 +34,7 @@ export enum StorageVars {
   IpfsUrl = 'ipfs:url',
   CurrentCabinetRoute = 'current:cabinet',
   Settings = 'settings',
+  ExtensionTabPageUrl = 'extension-tab-page-url',
 }
 
 export class PermanentStorage {

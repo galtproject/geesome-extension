@@ -1,5 +1,5 @@
+export {};
 import { JsIpfsService } from '@galtproject/geesome-libs/src/JsIpfsService';
-const ipfsClient = require('ipfs-http-client');
 const pull = require('pull-stream');
 const regex = require('../services/regex');
 let ipfs;
@@ -8,9 +8,12 @@ let ipfsService;
 const extensionIpns = 'cybvirusex';
 
 module.exports = {
-  init(options) {
-    ipfs = ipfsClient(options);
-    ipfsService = new JsIpfsService(ipfs);
+  init(ipfsNode) {
+    ipfs = ipfsNode;
+    ipfsService = new JsIpfsService(ipfsNode);
+  },
+  id() {
+    return ipfs.id();
   },
   saveContent(content) {
     if (content.match(regex.base64)) {
