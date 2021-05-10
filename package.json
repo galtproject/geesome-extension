@@ -40,7 +40,7 @@
     "ipfs-unixfs": "0.1.16",
     "ipld-dag-pb": "0.15.3",
     "js-amino": "^1.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "p-iteration": "^1.1.8",
     "postcss-loader": "^3.0.0",
     "ripemd160": "^2.0.1",
